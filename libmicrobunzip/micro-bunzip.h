@@ -50,8 +50,8 @@ typedef struct
 
     // james@jamestaylor.org: track relative position in input so we don't need tell
     /* TODO:
-     * gmarler@gmarler.com: May need to reinstate this to get tell() back, as Perl
-     *                      might need it
+     * gmarler@gmarler.com: May need to reinstate this to get tell() back, as we
+     *                      might want it in our Perl XS module
      */
     off_t position;
     unsigned char *inbuf /*,*outbuf*/;

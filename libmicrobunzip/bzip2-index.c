@@ -10,7 +10,7 @@ bzip2_index_available();
 bzip2_index_cleanup()
 */
 
-int bzip2_index_build( bunzip_data *bd )
+int bzip2_index_build( int bz2_fd, bunzip_data *bd, bz2_index *index )
 {
   int      status;
   uint64_t position;
@@ -18,7 +18,7 @@ int bzip2_index_build( bunzip_data *bd )
   /* Attempt to open the bzip2 file, if successfull this consumes the
    * entire header and moves us to the start of the first block.
    */
-  if ( ! ( status = start_bunzip( &bd, 0, 0, 0 ) ) )
+  if ( ! ( status = start_bunzip( &bd, bz2_fd, 0, 0 ) ) )
   {
     for ( ; ; )
     {
