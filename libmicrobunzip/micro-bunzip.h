@@ -79,5 +79,6 @@ static char * const bunzip_errors[] =
 /* ---- Forward declarations for micro-bzip.c ---------------------------- */
 
 extern int get_next_block( bunzip_data *bd );
+extern int start_bunzip( bunzip_data **bdp, int in_fd, char *inbuf, int len );
 
 #endif
