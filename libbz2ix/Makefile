@@ -1,4 +1,4 @@
-CFLAGS=-m64 -g -xO3 -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
+CFLAGS=-m64 -g -xO3 -Isrc -DNDEBUG $(OPTFLAGS)
 LIBS=-ldl $(OPTLIBS)
 PREFIX?=/usr/local
 
@@ -17,7 +17,7 @@ all: $(TARGET) $(SO_TARGET) tests
 dev: CFLAGS=-m64 -g -Isrc $(OPTFLAGS)
 dev: all
 
-$(TARGET): CFLAGS += -KPIC
+$(TARGET): CFLAGS += -xcode=pic32
 $(TARGET): build $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
@@ -31,9 +31,9 @@ build:
 
 # The Unit Tests
 .PHONY: tests
-tests: CFLAGS += $(TARGET)
+tests: CFLAGS += -Lbuild/ -Rbuild/ $(TARGET)
 tests: $(TESTS)
-	sh ./tests/runtests.sh
+	ksh ./tests/runtests.sh
 
 # The Cleaner
 clean:
