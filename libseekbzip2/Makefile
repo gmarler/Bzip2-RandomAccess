@@ -1,5 +1,10 @@
-CC     = cc -m64
+UNAME=/bin/uname
+
+OSNAME := $(UNAME) -s
+
+CC     := $(if $(filter $(OSNAME),SunOS),cc -m64,gcc)
 CFLAGS = -g -Isrc # -DNDEBUG -DTESTING
+CFLAGS += $(if $(filter $(OSNAME),SunOS),-xcode=pic32,)
 
 SOURCES=$(wildcard src/**/*.c src/*.c)
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
@@ -10,7 +15,7 @@ TESTS=$(patsubst %.c,%,$(TEST_SRC))
 TARGET=build/libseekbzip2.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 
-$(TARGET): CFLAGS += -xcode=pic32
+#$(TARGET): CFLAGS += -xcode=pic32
 $(TARGET): build $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
