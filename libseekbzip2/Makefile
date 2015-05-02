@@ -4,7 +4,9 @@ OSNAME := $(UNAME) -s
 
 CC     := $(if $(filter $(OSNAME),SunOS),cc -m64,gcc)
 CFLAGS = -g -Isrc # -DNDEBUG -DTESTING
-CFLAGS += $(if $(filter $(OSNAME),SunOS),-xcode=pic32,)
+CFLAGS += $(if $(filter $(OSNAME),SunOS),-xcode=pic32,-fPIC)
+# LDFLAGS += $(if $(filter $(OSNAME),SunOS),-Lbuild/ -Rbuild/,-Lbuild/)
+SHARED_LIB_FLAG := $(if $(filter $(OSNAME),SunOS),-G,-shared)
 
 SOURCES=$(wildcard src/**/*.c src/*.c)
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
@@ -21,7 +23,7 @@ $(TARGET): build $(OBJECTS)
 	ranlib $@
 
 $(SO_TARGET): $(TARGET) $(OBJECTS)
-	$(CC) -G -o $@ $(OBJECTS)
+	$(CC) $(SHARED_LIB_FLAG) -o $@ $(OBJECTS)
 
 build:
 	@mkdir -p build
@@ -29,7 +31,8 @@ build:
 
 # Unit Tests
 .PHONY: tests
-tests: CFLAGS += -Lbuild/ -Rbuild/ -lseekbzip2
+# tests: CFLAGS += -Lbuild/ -Rbuild/ -lseekbzip2
+tests: LDFLAGS += -Lbuild/ $(if $(filter $(OSNAME),SunOS),-Rbuild/,) -lseekbzip2
 tests: $(TESTS)
 	ksh ./tests/runtests.sh
 
