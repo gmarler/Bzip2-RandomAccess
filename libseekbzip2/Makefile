@@ -2,6 +2,9 @@ UNAME=/bin/uname
 
 OSNAME := $(UNAME) -s
 
+# TODO: Need a way to differentiate between whether we need a 32- or 64-bit
+# version of this library created, to match the bitness of the Perl we'll be
+# linking the XS routine(s) to.
 CC     := $(if $(filter $(OSNAME),SunOS),cc -m64,gcc)
 CFLAGS = -g -Isrc # -DNDEBUG -DTESTING
 CFLAGS += $(if $(filter $(OSNAME),SunOS),-xcode=pic32,-fPIC)
@@ -32,8 +35,10 @@ build:
 # Unit Tests
 .PHONY: tests
 # tests: CFLAGS += -Lbuild/ -Rbuild/ -lseekbzip2
-tests: LDFLAGS += -Lbuild/ $(if $(filter $(OSNAME),SunOS),-Rbuild/,) -lseekbzip2
-tests: $(TESTS)
+# TODO: is -ldl just for Linux, or for Solaris too?
+tests: LDFLAGS += -Lbuild/ $(if $(filter $(OSNAME),SunOS),-Rbuild/,)
+tests: LDLIBS = -lseekbzip2 -ldl
+tests: $(TESTS) $(SO_TARGET)
 	ksh ./tests/runtests.sh
 
 PROGS=bzip-table seek-bunzip
@@ -71,6 +76,6 @@ test: bzip-table seek-bunzip
 clean:
 	rm -rf build $(OBJECTS) $(TESTS)
 	rm -f tests/test.log
-	find . -name '*.gc*" -exec rm {} \;
+	find . -name '*.gc*' -exec rm {} \;
 
 
