@@ -36,7 +36,7 @@ build:
 .PHONY: tests
 # tests: CFLAGS += -Lbuild/ -Rbuild/ -lseekbzip2
 # TODO: is -ldl just for Linux, or for Solaris too?
-tests: LDFLAGS += -Lbuild/ $(if $(filter $(OSNAME),SunOS),-Rbuild/,)
+tests: LDFLAGS += -Lbuild/ $(if $(filter $(OSNAME),SunOS),-Rbuild/,-Wl,-rpath=build)
 tests: LDLIBS = -lseekbzip2 -ldl
 tests: $(TESTS) $(SO_TARGET)
 	ksh ./tests/runtests.sh
