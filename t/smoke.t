@@ -12,4 +12,4 @@ can_ok( $bz2ra, 'version'             );
 
 is ($bz2ra->version, '0.1.0', 'bz2ix library is version 0.1.0' );
 
-
+done_testing();
