@@ -1,9 +1,8 @@
 #include "minunit.h"
 #include <dlfcn.h>
 #include <link.h>
+#include "bz2ix.h"
 
-extern int open_bz2_file(const char *path);
-extern char *bz2ix_file_name(const char *path);
 
 /* typedef int (*lib_function)(const char *data); */
 char *lib_file = "build/libseekbzip2.so";
