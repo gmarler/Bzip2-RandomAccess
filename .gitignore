@@ -6,3 +6,8 @@
 _build
 # Avoid archives of *this* distribution
 /Bzip2-RandomAccess*
+# Avoid libraries
+*.so
+*.a
+# Avoid object files
+*.o
